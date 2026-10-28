@@ -1,0 +1,23 @@
+# Secretos: NUNCA subir la clave de API
+.env
+
+# Entornos de Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Datos: los PDF y los índices se regeneran, no se versionan
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+chroma/
+*.faiss
+
+# Sistema
+.DS_Store
+.vscode/
+.idea/

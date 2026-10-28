@@ -1,0 +1,8 @@
+{
+  "_ayuda": "Una entrada por PDF que pongas en data/raw/. 'skip_pages' sirve para saltar portada e índice (numeración desde 1).",
+  "documents": [
+    {"file": "ferrovial_2025.pdf",  "company": "Ferrovial",  "year": 2025, "skip_pages": []},
+    {"file": "telefonica_2025.pdf", "company": "Telefónica", "year": 2025, "skip_pages": []},
+    {"file": "bbva_2025.pdf",       "company": "BBVA",       "year": 2025, "skip_pages": []}
+  ]
+}
