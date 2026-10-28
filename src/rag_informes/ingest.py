@@ -35,6 +35,7 @@ def main(argv: list[str] | None = None) -> None:
             if not pdf.exists():
                 print(f"[aviso] No encuentro {pdf.name}; lo salto.")
                 continue
+            print(f"Procesando {pdf.name}... (puede tardar varios minutos)", flush=True)
 
             pages = extract_pdf(
                 pdf, doc["company"], doc["year"],
@@ -46,10 +47,12 @@ def main(argv: list[str] | None = None) -> None:
 
             empty = [p.page for p in pages if len(p.text) < 50]
             with_tables = sum(1 for p in pages if p.n_tables)
+            fallback = sum(1 for p in pages if p.n_tables_discarded)
             removed = {line for p in pages for line in p.removed_lines}
             print(
                 f"{doc['company']} {doc['year']}: {len(pages)} páginas, "
-                f"{with_tables} con tablas, {len(empty)} casi vacías"
+                f"{with_tables} con tablas, {fallback} con tablas pasadas a texto (plan B), "
+                f"{len(empty)} casi vacías"
             )
             if empty:
                 print(f"   páginas casi vacías (¿escaneadas o solo gráficos?): {empty[:15]}")

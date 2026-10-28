@@ -18,5 +18,26 @@ Apunta aquí decisiones, problemas y números. Es el material de la entrevista.
 - [ ] Cabeceras que cambian por capítulo y no llegan al 30 %: ajustar `REPEAT_THRESHOLD`.
 - [ ] Informe en inglés vs español: anotar el idioma de cada uno.
 
+**Primera ingesta (28/10/2026)**
+- Telefónica 2025: 410 páginas, 165 con tablas, 11 casi vacías. Tardó ~10 min.
+- BBVA 2025: 758 páginas, 265 con tablas, 23 casi vacías.
+- Total: 1170 páginas guardadas en `data/processed/pages.jsonl`.
+- La detección de tablas es lo lento (~1 s por página). El programa no muestra
+  progreso mientras procesa cada informe: parece colgado. Mejora pendiente.
+
+**Errores y aprendizajes**
+- El primer PDF de Ferrovial era un capítulo suelto de 2 páginas, no el informe.
+  Lo delató el resumen de la ingesta ("2 páginas"). Lección: revisar siempre
+  los números del resumen, no fiarse a ciegas.
+- El informe completo de Ferrovial (474 páginas) está en inglés porque la sede
+  está en Países Bajos. Tendremos documentos en dos idiomas: comprobar en la
+  Fase 2 si el buscador encuentra textos en inglés con preguntas en español.
+
+**Sospechas por revisar**
+- La limpieza elimina números sueltos como '0', '10' o '1 2 3 4 5 6'. Pueden ser
+  datos de tablas o gráficos, no números de página. Revisar con inspect_page.py.
+- Páginas casi vacías: Telefónica 205-210 y 317-319, BBVA 434-443 y 747-750.
+  ¿Separadores de capítulo, gráficos o algo que no se está extrayendo?
+
 ## Fase 2 · Trocear y vectorizar
 _pendiente_

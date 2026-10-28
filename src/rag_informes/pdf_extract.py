@@ -42,6 +42,7 @@ class PageText:
     page_label: str           # número impreso en el documento, si el PDF lo define
     text: str
     n_tables: int = 0
+    n_tables_discarded: int = 0   # tablas con palabras pegadas -> usadas como texto normal
     removed_lines: list[str] = field(default_factory=list)  # para depurar la limpieza
 
     @property
@@ -88,18 +89,44 @@ def _page_blocks(page: pymupdf.Page) -> list[tuple[tuple, str]]:
     return out
 
 
-def _find_tables(page: pymupdf.Page) -> list[tuple[tuple, str]]:
-    """Tablas detectadas como (bbox, markdown). Si falla la detección, lista vacía."""
+def _find_tables(page: pymupdf.Page) -> tuple[list[tuple[tuple, str]], int]:
+    """Tablas detectadas como (bbox, markdown) y nº de tablas descartadas.
+
+    Plan B: si el Markdown de una tabla tiene palabras pegadas (el detector de
+    tablas a veces pierde los espacios), la descartamos. Sus bloques de texto se
+    tratarán como texto normal, que sí conserva los espacios aunque pierda las columnas.
+    """
     try:
         found = page.find_tables()
     except Exception:  # la detección de tablas puede fallar en PDF raros
-        return []
-    tables = []
+        return [], 0
+    tables, discarded = [], 0
     for t in found.tables:
-        md = t.to_markdown(clean=True).strip()
-        if md:
-            tables.append((tuple(t.bbox), md))
-    return tables
+        md = clean_table_markdown(t.to_markdown(clean=True))
+        if not md:
+            continue
+        if has_glued_words(md):
+            discarded += 1
+            continue
+        tables.append((tuple(t.bbox), md))
+    return tables, discarded
+
+
+# 25 letras o más seguidas: casi seguro son palabras que han perdido los espacios.
+_GLUED_RE = re.compile(r"[^\W\d_]{25,}")
+
+
+def has_glued_words(text: str) -> bool:
+    return bool(_GLUED_RE.search(text))
+
+
+# Salto de línea dentro de una celda: PyMuPDF lo escribe como <br>, a veces "escapado".
+_BR_RE = re.compile(r"\s*(<br\s*/?>|&lt;br\s*/?&gt;)\s*", re.IGNORECASE)
+
+
+def clean_table_markdown(md: str) -> str:
+    """Quita los <br> que el conversor mete en las celdas con varias líneas."""
+    return _BR_RE.sub(" ", md).strip()
 
 
 def find_repeated_margin_lines(doc: pymupdf.Document, skip: set[int]) -> set[str]:
@@ -139,7 +166,7 @@ def extract_pdf(
                 continue
 
             blocks = _page_blocks(page)
-            tables = _find_tables(page) if tables_as_markdown else []
+            tables, discarded = _find_tables(page) if tables_as_markdown else ([], 0)
             removed: list[str] = []
             parts: list[str] = []
             placed_tables: set[int] = set()
@@ -178,6 +205,7 @@ def extract_pdf(
                     page_label=page.get_label() or str(page_no),
                     text=clean_text("\n".join(parts)),
                     n_tables=len(tables),
+                    n_tables_discarded=discarded,
                     removed_lines=removed,
                 )
             )

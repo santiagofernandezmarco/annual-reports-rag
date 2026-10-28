@@ -3,7 +3,7 @@
 import pymupdf
 import pytest
 
-from rag_informes.pdf_extract import clean_text, extract_pdf
+from rag_informes.pdf_extract import clean_table_markdown, clean_text, extract_pdf, has_glued_words
 
 HEADER = "Informe Anual 2025 · Empresa Demo S.A."
 
@@ -58,6 +58,16 @@ def test_table_converted_to_markdown(fake_report):
 def test_skip_pages(fake_report):
     pages = extract_pdf(fake_report, "Demo", 2025, skip_pages=[1, 2])
     assert [p.page for p in pages] == [3, 4, 5, 6]
+
+
+def test_clean_table_markdown_removes_br():
+    md = "|Pasivos por&lt;br&gt;impuestos|Importe<br>a pagar|"
+    assert clean_table_markdown(md) == "|Pasivos por impuestos|Importe a pagar|"
+
+
+def test_has_glued_words():
+    assert has_glued_words("|Acuerdoconjuntoenelquelaspartes|x|")
+    assert not has_glued_words("|Internacionalización del negocio|2025|")
 
 
 def test_clean_text_dehyphenates():
