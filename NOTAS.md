@@ -40,4 +40,11 @@ Apunta aquí decisiones, problemas y números. Es el material de la entrevista.
   ¿Separadores de capítulo, gráficos o algo que no se está extrayendo?
 
 ## Fase 2 · Trocear y vectorizar
-_pendiente_
+
+
+**Troceado (30/10)**
+- Fragmentos siempre dentro de una página: la cita es exacta.
+- Corte por párrafos (y por frases si el párrafo es largo): no se parten ideas.
+- Máx. 300 palabras con 50 de solapamiento: multilingual-e5 solo lee ~350 palabras.
+- Resultado: 4.263 fragmentos, ~225 palabras de media.
+- En BBVA cada línea venía como bloque separado: hubo que reconstruir los párrafos.
