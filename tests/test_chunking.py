@@ -10,7 +10,9 @@ def _page(text, page=7):
 
 
 def _sentence(i, n_words=20):
-    return "Frase número " + str(i) + " " + " ".join(["palabra"] * (n_words - 3)) + "."
+    # palabras distintas en cada frase: si fueran todas iguales, el detector de
+    # duplicados (con razón) tomaría los fragmentos por copias
+    return "Frase número " + str(i) + " " + " ".join(f"p{i}x{j}" for j in range(n_words - 3)) + "."
 
 
 def test_rebuild_joins_lines_of_the_same_sentence():
@@ -73,6 +75,20 @@ def test_numbers_counting_double_never_exceed_max():
 
 def test_tiny_fragments_are_dropped():
     assert chunk_page(_page("JFK Airport. New York, U.S.")) == []
+
+
+def test_near_duplicate_chunks_on_same_page_are_dropped():
+    # Ferrovial p.396: una tabla rota generaba muchos fragmentos casi iguales
+    block = " ".join(f"dato{i}" for i in range(250)) + "."
+    text = "\n\n".join([block + " Variante A.", block + " Variante B.", block + " Variante C."])
+    chunks = chunk_page(_page(text), max_words=300, overlap_words=0)
+    assert len(chunks) == 1
+
+
+def test_tables_are_cleaned_when_chunking():
+    text = "|Concepto|**2025**|\n|---|---|\n|E5&amp;#45;2|**127**|"
+    (c,) = chunk_page(_page(text), min_words=1)
+    assert c.text == "|Concepto|2025|\n|---|---|\n|E5-2|127|" and c.has_table
 
 
 def test_count_words():

@@ -21,6 +21,9 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, asdict
+from difflib import SequenceMatcher
+
+from .text_clean import clean_table_markdown, is_soup_table, is_table, table_to_text
 
 MAX_WORDS = 300
 OVERLAP_WORDS = 50
@@ -53,19 +56,27 @@ class Chunk:
 
 
 # --------------------------------------------------------------------------- 1
-def _is_table(block: str) -> bool:
-    lines = [l for l in block.splitlines() if l.strip()]
-    return bool(lines) and all(l.lstrip().startswith("|") for l in lines)
+_is_table = is_table
+NEAR_DUPLICATE = 0.9   # dos fragmentos de la misma página con >= 90 % de coincidencia: sobra uno
 
 
 def rebuild_paragraphs(page_text: str) -> list[str]:
-    """Une los trozos separados por línea en blanco que en realidad son la misma frase."""
+    """Une los trozos separados por línea en blanco que en realidad son la misma frase.
+
+    Además limpia las tablas (entidades HTML, negritas, celdas copiadas) y convierte en
+    texto normal las que son "sopa de números".
+    """
     blocks = [b.strip() for b in re.split(r"\n\s*\n", page_text) if b.strip()]
     paragraphs: list[str] = []
     for block in blocks:
         if _is_table(block):
-            paragraphs.append(block)
-            continue
+            table = clean_table_markdown(block)
+            if not is_soup_table(table):
+                paragraphs.append(table)
+                continue
+            block = table_to_text(table)        # plan B: la tabla rota pasa a ser texto
+            if not block:
+                continue
         block = re.sub(r"\s*\n\s*", " ", block)  # saltos de línea internos -> espacio
         prev = paragraphs[-1] if paragraphs else None
         if prev is not None and not _is_table(prev) and not _END_OF_SENTENCE.search(prev):
@@ -147,6 +158,14 @@ def _join(pieces: list[_Piece]) -> str:
     return text
 
 
+def _similar(a: list[str], b: list[str]) -> float:
+    """Parecido entre dos listas de palabras, de 0 a 1 (proporción de palabras coincidentes en orden)."""
+    sm = SequenceMatcher(None, a, b, autojunk=False)
+    if sm.real_quick_ratio() < NEAR_DUPLICATE or sm.quick_ratio() < NEAR_DUPLICATE:
+        return 0.0   # atajos baratos: si ni siquiera el límite superior llega, no calculamos
+    return sm.ratio()
+
+
 def chunk_page(page: dict, max_words: int = MAX_WORDS, overlap_words: int = OVERLAP_WORDS,
                min_words: int = MIN_WORDS) -> list[Chunk]:
     """Trocea UNA página (un dict de pages.jsonl) en fragmentos."""
@@ -176,11 +195,16 @@ def chunk_page(page: dict, max_words: int = MAX_WORDS, overlap_words: int = OVER
         groups.append(current)
 
     chunks: list[Chunk] = []
+    kept_words: list[list[str]] = []
     for group in groups:
         text = _join(group)
         n = count_words(text)
         if n < min_words:
             continue
+        words = _WORD_RE.findall(text.lower())
+        if any(_similar(words, prev) >= NEAR_DUPLICATE for prev in kept_words):
+            continue   # casi idéntico a otro fragmento de esta página (tablas repetidas)
+        kept_words.append(words)
         chunks.append(Chunk(
             chunk_id=f"{page['doc_id']}_p{page['page']}_c{len(chunks) + 1}",
             doc_id=page["doc_id"], company=page["company"], year=page["year"],

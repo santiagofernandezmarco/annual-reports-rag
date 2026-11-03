@@ -22,6 +22,8 @@ from pathlib import Path
 
 import pymupdf
 
+from .text_clean import clean_table_markdown, has_glued_words, is_soup_table  # noqa: F401 (reexportadas)
+
 # Fracción de la altura de página considerada "franja" de cabecera / pie.
 MARGIN_FRACTION = 0.08
 # Un texto en la franja se considera cabecera/pie si aparece en al menos
@@ -95,6 +97,7 @@ def _find_tables(page: pymupdf.Page) -> tuple[list[tuple[tuple, str]], int]:
     Plan B: si el Markdown de una tabla tiene palabras pegadas (el detector de
     tablas a veces pierde los espacios), la descartamos. Sus bloques de texto se
     tratarán como texto normal, que sí conserva los espacios aunque pierda las columnas.
+    Lo mismo si es una "sopa de números" (celdas con decenas de cifras amontonadas).
     """
     try:
         found = page.find_tables()
@@ -105,28 +108,11 @@ def _find_tables(page: pymupdf.Page) -> tuple[list[tuple[tuple, str]], int]:
         md = clean_table_markdown(t.to_markdown(clean=True))
         if not md:
             continue
-        if has_glued_words(md):
+        if has_glued_words(md) or is_soup_table(md):
             discarded += 1
             continue
         tables.append((tuple(t.bbox), md))
     return tables, discarded
-
-
-# 25 letras o más seguidas: casi seguro son palabras que han perdido los espacios.
-_GLUED_RE = re.compile(r"[^\W\d_]{25,}")
-
-
-def has_glued_words(text: str) -> bool:
-    return bool(_GLUED_RE.search(text))
-
-
-# Salto de línea dentro de una celda: PyMuPDF lo escribe como <br>, a veces "escapado".
-_BR_RE = re.compile(r"\s*(<br\s*/?>|&lt;br\s*/?&gt;)\s*", re.IGNORECASE)
-
-
-def clean_table_markdown(md: str) -> str:
-    """Quita los <br> que el conversor mete en las celdas con varias líneas."""
-    return _BR_RE.sub(" ", md).strip()
 
 
 def find_repeated_margin_lines(doc: pymupdf.Document, skip: set[int]) -> set[str]:

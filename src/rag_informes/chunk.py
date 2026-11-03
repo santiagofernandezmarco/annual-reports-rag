@@ -29,12 +29,18 @@ def main(argv: list[str] | None = None) -> None:
 
     by_doc: dict[str, list] = defaultdict(list)
     pages_without_chunks: dict[str, int] = defaultdict(int)
+    seen_texts: set[str] = set()
+    exact_duplicates = 0
     with args.pages.open(encoding="utf-8") as f:
         for line in f:
             page = json.loads(line)
             chunks = chunk_page(page, args.max_words, args.overlap)
-            by_doc[page["doc_id"]].extend(chunks)
-            if not chunks:
+            # Duplicados exactos entre páginas (avisos legales repetidos, etc.): se queda el primero
+            unique = [c for c in chunks if c.text not in seen_texts]
+            exact_duplicates += len(chunks) - len(unique)
+            seen_texts.update(c.text for c in unique)
+            by_doc[page["doc_id"]].extend(unique)
+            if not unique:
                 pages_without_chunks[page["doc_id"]] += 1
 
     tmp = args.out.with_suffix(".tmp")
@@ -54,7 +60,8 @@ def main(argv: list[str] | None = None) -> None:
         print(f"{doc:<18}{len(chunks):>11}{statistics.mean(words):>11.0f}{min(words):>6}{max(words):>6}"
               f"{tables:>11}{pages_without_chunks[doc]:>22}")
         total += len(chunks)
-    print(f"\nGuardados {total} fragmentos en {args.out}")
+    print(f"\nDuplicados exactos entre páginas descartados: {exact_duplicates}")
+    print(f"Guardados {total} fragmentos en {args.out}")
 
 
 if __name__ == "__main__":
