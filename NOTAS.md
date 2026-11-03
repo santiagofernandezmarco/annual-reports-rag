@@ -100,6 +100,46 @@ Apunta aquí decisiones, problemas y números. Es el material de la entrevista.
 - Una tabla larga (p.396) ocupa 4 de los 10 primeros puestos.
 - Ruido nuevo: índices con letras separadas ("G L O B A L S T R A T E G Y").
 
+## Fase 3 · El asistente con Groq (03/11)
+
+**Decisiones**
+- LLM vía Groq (gratis) con la librería `openai` apuntando a la dirección de Groq: el
+  mismo código serviría para OpenAI o Azure OpenAI (cambiar dirección, clave y modelo).
+- Selección de fragmentos: 20 candidatos -> 6 enviados, máximo 2 por página.
+- Si la pregunta nombra varias empresas (o dice "compara"/"las tres"), se busca en
+  cada una por separado y se reparten los huecos.
+- Citas por NÚMERO: el LLM cita [1], [2]... y es el código quien convierte cada número
+  en "Empresa año, página N" con los metadatos. El LLM no puede inventarse una página,
+  y el código avisa si cita un número que no existe.
+- Frase fija para "no lo sé": "No encuentro esta información en los informes
+  disponibles." -> se puede detectar automáticamente en la Fase 4.
+- Temperatura 0: respuestas estables y reproducibles.
+
+**Problemas encontrados**
+- Los modelos Llama ya no estaban disponibles en la cuenta, aunque la documentación
+  los listaba. Solución: comando `python -m rag_informes.llm`, que pregunta a la API
+  qué modelos hay, en vez de fiarse de la documentación. Modelo final: openai/gpt-oss-120b.
+- gpt-oss-120b "razona" antes de responder y ese razonamiento gasta tokens: se subió el
+  límite a 2.000 tokens y se le pide razonar poco (reasoning_effort="low").
+- gpt-oss cita con corchetes chinos 【2】 en vez de [2]: el código no las reconocía y
+  decía "no cita ninguna fuente". Arreglado aceptando ambos formatos.
+
+**Primeras preguntas**
+- "¿Cuántos empleados tenía BBVA en 2025?" -> 127.174, citado. Bien.
+- "¿Qué riesgos de tipos de interés menciona BBVA?" -> repreciación, curva, opcionalidad,
+  carteras de negociación; citas coherentes con los fragmentos (p.549 y p.556).
+- "Compara... las tres empresas" -> trae información de las tres, cada una citada.
+- "¿Quién ganó la última Champions League?" -> "No encuentro esta información". Bien:
+  el modelo no usa lo que "sabe" por su cuenta.
+- "¿Cuál fue la deuda neta de Ferrovial en 2025?" -> "No encuentro esta información",
+  pero es un FALSO NEGATIVO: en inglés ("What was Ferrovial's net debt in 2025?") sí la
+  encuentra (p.7: -1.300 M€, excluidos proyectos de infraestructura = caja neta).
+  Con --show-context se ve que en español los 6 fragmentos eran irrelevantes
+  (similitudes empatadas ~0,84). El fallo es del buscador, no del LLM.
+- Distinción importante: falso negativo (dice "no lo sé" aunque está) es molesto pero
+  no engaña; alucinación (se inventa el dato) es mucho más grave. Ninguna alucinación
+  en estas preguntas.
+
 ## Pendiente para la Fase 4 (mejoras a medir, no a ojo)
 
 Idea clave: no ajustar el sistema a base de búsquedas sueltas. Primero crear un
@@ -107,6 +147,7 @@ conjunto de preguntas con su respuesta correcta y medir; luego probar cada mejor
 y quedarse solo con las que mejoren los números.
 
 - [ ] Traducir la pregunta al idioma del documento antes de buscar (query translation).
+      Caso de prueba claro: "deuda neta de Ferrovial" falla en español y acierta en inglés.
 - [ ] Búsqueda híbrida: significado (embeddings) + palabras exactas (BM25).
 - [ ] Reranker: buscar ~20 candidatos y que un segundo modelo elija los 5 mejores.
 - [ ] Limitar fragmentos por página (1-2) para diversificar resultados.
