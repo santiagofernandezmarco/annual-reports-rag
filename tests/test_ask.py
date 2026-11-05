@@ -112,6 +112,7 @@ def test_user_message_numbers_fragments_with_source():
     ("Dato [2, 4] y [1; 2].", [2, 4, 1]),
     ("Sin citas.", []),
     ("Estilo gpt-oss【2】 y 【1】【2】.", [2, 1]),
+    ("Con líneas【1†L1-L4】【6†L3-L4】.", [1, 6]),
 ])
 def test_parse_citations(text, expected):
     assert parse_citations(text) == expected
@@ -122,6 +123,11 @@ def test_fullwidth_citations_are_normalized_and_mapped(collection):
     a = answer_question("¿Cuántos empleados tiene BBVA?", collection, FakeEmbedder(), llm, COMPANIES)
     assert a.text == "BBVA tiene 127.174 empleados[1]."
     assert [(n, h["page"]) for n, h in a.sources] == [(1, 189)]
+
+
+def test_line_suffix_citations_are_normalized():
+    from rag_informes.prompts import normalize_citations
+    assert normalize_citations("0,92 €【1†L1-L4】【6†L3-L4】.") == "0,92 €[1][6]."
 
 
 def test_no_answer_detection():

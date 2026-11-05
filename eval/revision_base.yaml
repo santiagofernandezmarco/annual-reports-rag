@@ -1,0 +1,150 @@
+# Revisión manual de los resultados 'base'.
+# Para cada pregunta, lee la respuesta y la esperada y decide:
+#   acierto: true   -> la respuesta es correcta (aunque el automático diga que no)
+#   acierto: false  -> la respuesta es incorrecta
+#   acierto: null   -> sin revisar (cuenta el resultado automático)
+# Explica siempre el motivo. Las preguntas congeladas NO se tocan.
+
+- id: bbva-04
+  automatico: false
+  pregunta: "¿Cuál fue la tasa de mora del Grupo BBVA en 2025?"
+  esperada: "2,7 % (con una tasa de cobertura del 85 % y un coste de riesgo del 1,39 %)."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: la tasa de mora (2,7 %, p.10) está en el informe, pero el buscador no trajo esa página."
+
+- id: bbva-09
+  automatico: false
+  pregunta: "¿Cuántos empleados tenía BBVA en 2024?"
+  esperada: "125.916 empleados (no confundir con los 127.174 de 2025)."
+  respuesta: "BBVA tenía **123 600 empleados** en 2024 [1]"
+  fuentes: ["BBVA p.693"]
+  acierto: false
+  motivo: "[Propuesta de Claude] Cifra incorrecta: responde 123.600 y en 2024 eran 125.916 (p.189). Leyó mal una tabla desordenada."
+
+- id: bbva-11
+  automatico: false
+  pregunta: "¿Qué riesgos de tipos de interés menciona BBVA?"
+  esperada: "BBVA distingue dos ámbitos. En el banking book, el riesgo de interés estructural (IRRBB o RIE): el impacto de las variaciones de tipos en los resultados (vía margen de intereses y valoración a valor razonable) y en el valor patrimonial, con cuatro fuentes: repreciación, curva, opcionalidad y base; además, el riesgo de spread de crédito del banking book (CSRBB). En las carteras de negociación (trading book), el riesgo de tipos de interés como parte del riesgo de mercado, por la exposición a movimientos de las curvas de tipos."
+  respuesta: "- **Riesgo básico de tipo de interés**: originado por la diferencia entre los plazos de revisión de tipos de interés o vencimiento de las operaciones de inversión respecto a sus financiaciones[1].  \n- **Exposición a cambios en la pendiente y forma de la curva de tipos**[1].  \n- **Indexación a diferentes curvas**[1].  \n- **Riesgo de opcionalidad** presente en determinadas operaciones bancarias[1].  \n- **Riesgo de tipos de interés en carteras de negociación**: exposición al movimiento de las distintas curvas de tipos de interés en las que opera el Grupo, afectando a productos del mercado monetario (depósitos, futuros, call‑money swaps, etc.) y a derivados tradicionales de tipos de interés (swaps, caps, floors, swaptions, etc.) y, en general, a la valoración de cualquier producto financiero por el efecto del descuento financiero[4]."
+  fuentes: ["BBVA p.549", "BBVA p.556"]
+  acierto: false
+  motivo: "[Propuesta de Claude] Incompleta: enumera repreciación, curva, opcionalidad y base, pero omite el marco IRRBB y el CSRBB (idea partida entre p.548 y p.549)."
+
+- id: tef-02
+  automatico: false
+  pregunta: "¿Por qué varió tanto la plantilla de Telefónica entre 2024 y 2025?"
+  esperada: "Bajó de 100.870 (2024) a 82.655 (2025), principalmente por cambios en el perímetro de consolidación: la venta de Telefónica Móviles Argentina, Telefónica del Perú, Telefónica Móviles del Uruguay y Otecel (salida de Hispanoamérica)."
+  respuesta: "La plantilla de Telefónica experimentó una reducción importante entre 2024 y 2025 porque :\n\n* La plantilla promedio disminuyó un 13,6 % interanual, pasando a 87 607 empleados en 2025 [1].  \n* En el desglose por países, el número de empleados en Brasil cayó de 36 200 a 34 905, mientras que en España aumentó ligeramente de 25 086 a 25 516 [2].  \n* Los gastos de personal crecieron de 4 852 millones de euros en 2024 a 7 548 millones de euros en 2025, impulsados por los mayores gastos de reestructuración y el registro del plan de reestructuración de 2025 (2 757 millones de euros) [1].  \n\nEstos factores –la reestructuración interna y el ajuste de la plantilla promedio– explican la variación significativa de la plantilla entre ambos años."
+  fuentes: ["Telefónica p.18", "Telefónica p.128"]
+  acierto: false
+  motivo: "[Propuesta de Claude] No responde al porqué: dice que la plantilla bajó, pero no menciona el cambio de perímetro (venta de filiales de Hispanoamérica)."
+
+- id: tef-06
+  automatico: false
+  pregunta: "¿Cuál es el precio objetivo de los analistas para la acción de Telefónica?"
+  esperada: "4,05 euros por acción (recomendaciones: 21 % comprar, 51 % mantener, 28 % vender)."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: el precio objetivo (4,05 €) está en la infografía de la p.13, que el buscador no trajo."
+
+- id: tef-07
+  automatico: false
+  pregunta: "¿Quiénes son los accionistas significativos de Telefónica?"
+  esperada: "SEPI 10 %, Criteria Caixa 9,99 %, PIF 9,97 %, BBVA 5,01 % y BlackRock 5,01 %."
+  respuesta: "Los accionistas significativos que aparecen en los fragmentos son:\n\n- **Banco Bilbao Vizcaya Argentaria, S.A.** (representado por D. José María Abril Pérez)[2]  \n- **Criteria Caixa, S.A.U.** (representado por D. Isidro Fainé Casas)[2]  \n- **Green Bridge Investment Company SCS / Stc.** (representado por D. Olayan M. Alwetaid)[2]  \n- **BlackRock, Inc.** y sus entidades vinculadas (BlackRock Saturn Subco, LLC; BlackRock Finance, Inc.; etc.)[3]  \n\nEstos son los accionistas o grupos de accionistas que el informe de sostenibilidad y el informe anual de gobierno corporativo identifican como “accionistas significativos”."
+  fuentes: ["Telefónica p.253", "Telefónica p.354"]
+  acierto: false
+  motivo: "[Propuesta de Claude] Incompleta: saca nombres de otra página (consejeros dominicales) y le faltan SEPI y PIF (p.13)."
+
+- id: tef-09
+  automatico: false
+  pregunta: "¿Qué importe neto de la cifra de negocios tuvo VMO2 en 2025?"
+  esperada: "11.808 millones de euros, un 6,4 % menos que en 2024 (12.616 millones)."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: tenía la tabla de VMO2 (p.24) delante, pero no supo qué columna era 2025."
+
+- id: fer-03
+  automatico: false
+  pregunta: "¿Cuáles fueron los ingresos de Ferrovial en 2025?"
+  esperada: "9.627 millones de euros (+8,6 % en términos comparables)."
+  respuesta: "Los ingresos de Ferrovial en 2025 fueron **7 653 millones de euros** [4]."
+  fuentes: ["Ferrovial p.31"]
+  acierto: false
+  motivo: "[Propuesta de Claude] Cifra incorrecta: 7.653 M€; los ingresos de 2025 son 9.627 M€ (p.33/41/55). Dato real de otra magnitud."
+
+- id: fer-04
+  automatico: false
+  pregunta: "¿Qué participación adicional del 407 ETR compró Ferrovial en 2025 y cuánto pagó?"
+  esperada: "Un 5,06 % adicional por 1.271 millones de euros, hasta alcanzar el 48,29 % de la autopista canadiense."
+  respuesta: "Ferrovial adquirió un **5,06 % adicional** de la participación en 407 ETR en 2025, por un importe total de **CAD 1,99 mil millones (equivalente a EUR 1,3 mil millones)**[1][3]."
+  fuentes: ["Ferrovial p.35", "Ferrovial p.336"]
+  acierto: true
+  motivo: "[Propuesta de Claude] Correcta: 5,06 % y 'EUR 1,3 mil millones' es 1.271 M€ redondeado (la clave exigía la cifra exacta)."
+
+- id: fer-05
+  automatico: false
+  pregunta: "¿En qué índice bursátil entró Ferrovial en diciembre de 2025?"
+  esperada: "En el Nasdaq-100, año y medio después de empezar a cotizar en EE. UU."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: la entrada en el Nasdaq-100 está en p.7 y p.13; pregunta en español sobre informe en inglés."
+
+- id: fer-06
+  automatico: null
+  pregunta: "¿Cómo gestiona Ferrovial el riesgo de tipo de interés?"
+  esperada: "Busca optimizar el gasto financiero y mantener proporciones adecuadas de deuda a tipo fijo y variable según el mercado; cuando los tipos están bajos, intenta fijar importes futuros a nivel de las sociedades ex-proyectos de infraestructura."
+  respuesta: "Ferrovial gestiona el riesgo de tipo de interés dentro del marco de su gestión financiera mediante:\n\n* **Identificación del riesgo**: reconoce que las variaciones de variables financieras, entre ellas los tipos de interés, pueden afectar la capacidad de financiación de proyectos y los márgenes netos [1].\n* **Medidas de control**: aplica análisis y gestión activa de las políticas financieras, así como una gestión eficaz de las alternativas financieras disponibles para mitigar la exposición a esas variaciones [1]."
+  fuentes: ["Ferrovial p.203"]
+  acierto: true
+  motivo: "Correcta y con cita válida (p.203), aunque más genérica que la esperada: no menciona el equilibrio deuda fija/variable."
+
+- id: fer-09
+  automatico: false
+  pregunta: "¿Cuál es el precio objetivo de consenso de los analistas para Ferrovial y qué rating crediticio tiene?"
+  esperada: "Precio objetivo de consenso de 59,0 euros; rating crediticio BBB (S&P y Fitch)."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: precio objetivo (59 €) y rating (BBB) están en la p.19, con letras separadas por espacios."
+
+- id: fer-10
+  automatico: false
+  pregunta: "¿Quiénes son los principales accionistas de Ferrovial?"
+  esperada: "Capital flotante 55,46 %; Rafael del Pino Calvo-Sotelo 21,53 %; TCI Master Fund 10,03 %; María del Pino Calvo-Sotelo 8,64 %; BlackRock 4,33 % (datos a 31/12/2025)."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: los accionistas están en la infografía de la p.20, que el buscador no trajo."
+
+- id: comp-01
+  automatico: false
+  pregunta: "¿Cuál de las tres empresas tenía más empleados en 2025?"
+  esperada: "BBVA (127.174), seguida de Telefónica (82.655) y Ferrovial (22.609)."
+  respuesta: "- **BBVA**: 127 174 empleados (61 749 hombres + 65 425 mujeres) en 2025[2]  \n- **Ferrovial**: 11 862 empleados (7 478 hombres + 4 384 mujeres) en 2025[4]  \n- **Telefónica**: 87 607 empleados (plantilla promedio) en 2025[5]\n\n**La empresa con más empleados en 2025 es BBVA.**"
+  fuentes: ["BBVA p.693", "Ferrovial p.144", "Telefónica p.18"]
+  acierto: false
+  motivo: "[Propuesta de Claude] Acierta que BBVA es la mayor, pero las cifras de Ferrovial (11.862) y Telefónica (87.607, plantilla media) son incorrectas."
+
+- id: comp-02
+  automatico: null
+  pregunta: "Compara cómo gestionan el riesgo de tipos de interés las tres empresas."
+  esperada: "BBVA: marco IRRBB (repreciación, curva, opcionalidad, base) y sensibilidad positiva a subidas de tipos en el margen. Telefónica: actuaciones globales, fundamentalmente con derivados. Ferrovial: optimizar gasto financiero y equilibrar deuda fija/variable."
+  respuesta: "**BBVA**  \n- El riesgo de tipo de interés estructural (RIE o IRRBB) se gestiona dentro del modelo de tres líneas de defensa. La primera línea (Finanzas) es responsable de la gestión del riesgo estructural; la segunda línea (GRM y unidades de Control Interno) identifica el riesgo, define políticas y evalúa la eficacia de los controles; la tercera línea (Auditoría Interna) revisa los controles y procesos específicos [2].\n\n**Ferrovial**  \n- En la tabla de riesgos se señala que las variaciones en variables financieras como los tipos de interés forman parte de los “Risk Events” y que su impacto potencial se controla mediante “policies Analysis and active management” (análisis de políticas y gestión activa) [3].  \n- Además, la estructura de gobierno muestra una supervisión “bottom‑up” con comités de auditoría y control y una separación entre primera, segunda y tercera línea de defensa [4].\n\n**Telefónica**  \n- Para los riesgos financieros, entre ellos el riesgo de tipo de cambio o de interés, la empresa indica que se gestionan mediante “actuaciones globales, fundamentalmente con derivados financieros” [5].\n\n**Comparación**  \n- Las tres compañías utilizan un modelo de tres líneas de defensa, pero describen diferentes mecanismos operativos: BBVA enfatiza la responsabilidad de la primera línea (Finanzas) y la revisión de controles por la segunda y tercera línea; Ferrovial menciona específicamente el análisis de políticas y la gestión activa como medidas de control; Telefónica recurre a instrumentos financieros derivados como principal herramienta de mitigación."
+  fuentes: ["BBVA p.548", "Ferrovial p.203", "Ferrovial p.200", "Telefónica p.216"]
+  acierto: true
+  motivo: "Cubre las tres empresas con citas válidas. Matiz: la conclusión generaliza las tres líneas de defensa a Telefónica sin fuente."
+
+- id: comp-03
+  automatico: false
+  pregunta: "Compara los ratings crediticios de Telefónica y Ferrovial."
+  esperada: "Telefónica: Moody's Baa3, Fitch BBB, S&P BBB-. Ferrovial: BBB (S&P y Fitch)."
+  respuesta: "No encuentro esta información en los informes disponibles."
+  fuentes: []
+  acierto: false
+  motivo: "[Propuesta de Claude] Falso negativo: los ratings están en Telefónica p.13 y Ferrovial p.19 (infografías); el buscador no los trajo."

@@ -38,13 +38,14 @@ def build_user_message(question: str, hits: list[dict]) -> str:
     return "Fragmentos:\n\n" + "\n\n".join(blocks) + f"\n\nPregunta: {question}"
 
 
-# Corchetes normales [1] o "corchetes chinos" 【1】, que usan los modelos gpt-oss
-_CITATION_RE = re.compile(r"[\[【](\d+(?:\s*[,;]\s*\d+)*)[\]】]")
+# Corchetes normales [1] o "corchetes chinos" 【1】 que usan los modelos gpt-oss,
+# a veces con un sufijo de líneas: 【1†L1-L4】
+_CITATION_RE = re.compile(r"[\[【](\d+(?:\s*[,;]\s*\d+)*)(?:†[^\]】]*)?[\]】]")
 
 
 def normalize_citations(answer: str) -> str:
-    """【2】 -> [2], para que todas las respuestas citen igual."""
-    return re.sub(r"【(\d+(?:\s*[,;]\s*\d+)*)】", r"[\1]", answer)
+    """【2】 o 【2†L1-L4】 -> [2], para que todas las respuestas citen igual."""
+    return re.sub(r"【(\d+(?:\s*[,;]\s*\d+)*)(?:†[^】]*)?】", r"[\1]", answer)
 
 
 def parse_citations(answer: str) -> list[int]:

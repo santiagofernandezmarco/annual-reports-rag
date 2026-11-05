@@ -33,7 +33,10 @@ class LLM(Protocol):
 
 
 class GroqLLM:
-    def __init__(self, model: str | None = None, api_key: str | None = None):
+    def __init__(self, model: str | None = None, api_key: str | None = None, max_retries: int = 2):
+        """max_retries: reintentos automáticos si Groq responde "límite alcanzado" (429).
+        La librería espera lo que Groq indique (cabecera retry-after) antes de reintentar.
+        Para la evaluación por lotes conviene subirlo (p. ej. 8)."""
         from dotenv import load_dotenv
         from openai import OpenAI
 
@@ -45,7 +48,7 @@ class GroqLLM:
                 "GROQ_API_KEY=gsk_...tu_clave..."
             )
         self.name = model or os.getenv("GROQ_MODEL") or DEFAULT_MODEL
-        self.client = OpenAI(api_key=api_key, base_url=GROQ_BASE_URL)
+        self.client = OpenAI(api_key=api_key, base_url=GROQ_BASE_URL, max_retries=max_retries)
 
     def complete(self, system: str, user: str) -> str:
         import openai

@@ -140,20 +140,71 @@ Apunta aquí decisiones, problemas y números. Es el material de la entrevista.
   no engaña; alucinación (se inventa el dato) es mucho más grave. Ninguna alucinación
   en estas preguntas.
 
-## Pendiente para la Fase 4 (mejoras a medir, no a ojo)
+## Fase 4 · Evaluación: medir antes de mejorar (05/11)
 
-Idea clave: no ajustar el sistema a base de búsquedas sueltas. Primero crear un
-conjunto de preguntas con su respuesta correcta y medir; luego probar cada mejora
-y quedarse solo con las que mejoren los números.
+Idea clave: no ajustar el sistema a base de búsquedas sueltas. Primero un conjunto
+de preguntas con su respuesta correcta, luego medir, y cada mejora se queda solo si
+mejora los números.
 
-- [ ] Traducir la pregunta al idioma del documento antes de buscar (query translation).
-      Caso de prueba claro: "deuda neta de Ferrovial" falla en español y acierta en inglés.
+### El conjunto de prueba (`eval/preguntas.yaml`)
+- 40 preguntas **congeladas**: cifra 17, idioma 7 (español sobre el informe en inglés
+  de Ferrovial y al revés), trampa 5, descriptiva 3, comparación 3, sin respuesta 5.
+- Cada una con respuesta esperada, páginas y "claves" (cifras o palabras que deben
+  aparecer; `a | b` = vale cualquiera de las dos).
+- Verificadas sobre el PDF. Lección: **yo también me equivoqué** al escribir respuestas
+  (tef-01: 100.870 era el dato de 2024; el de 2025 es 82.655). Un conjunto de prueba mal
+  hecho mide mal: hay que comprobarlo con la página real.
+- Parejas de control (fer-01/fer-07, fer-02/fer-08): misma pregunta en español y en
+  inglés, para aislar el efecto del idioma.
+
+### Las métricas (`python -m rag_informes.evaluate`)
+- **Búsqueda**: ¿llegó al LLM algún fragmento de una página correcta? (mide el buscador)
+- **Cita**: ¿citó una página correcta?
+- **Claves**: ¿aparecen las cifras/palabras clave? (las cifras se comparan en cualquier
+  formato: 127.174 = 127,174 = 127 174)
+- **Rechazo**: ¿dijo "no lo encuentro"? En las preguntas sin respuesta es lo correcto;
+  en las demás es un **falso negativo**. Responder a una sin respuesta = **alucinación**.
+- **Páginas de evidencia**: un mismo dato sale en varias páginas (resumen, tablas...).
+  Se cuentan como correctas las páginas de la misma empresa donde aparece la cifra
+  clave (solo cifras "específicas": 3+ dígitos y que no sean un año).
+- Acierto automático + **revisión manual** de los dudosos (`eval/revision_base.yaml`):
+  la máquina no entiende si una respuesta descriptiva es buena o si un redondeo vale.
+
+### Línea base (`--label base`): k=6, e5-base, gpt-oss-120b
+
+| Tipo | N | Búsqueda | Cita | Acierto final |
+|---|---|---|---|---|
+| cifra | 17 | 76 % | 76 % | 14/17 (82 %) |
+| idioma | 7 | 43 % | 29 % | 4/7 (57 %) |
+| trampa | 5 | 40 % | 20 % | 1/5 (20 %) |
+| descriptiva | 3 | 67 % | 67 % | 2/3 (67 %) |
+| comparación | 3 | 33 % | 33 % | 1/3 (33 %) |
+| sin respuesta | 5 | — | — | 5/5 (100 %) |
+| **TOTAL** | 40 | **60 %** | 54 % | **27/40 (68 %)** |
+
+- **0 alucinaciones, 0 citas inventadas.** El sistema es prudente: falla por no
+  responder, no por inventar.
+- Falsos negativos (7): bbva-04, tef-06, tef-09, fer-05, fer-09, fer-10, comp-03.
+  Casi todos porque el buscador **no trajo la página buena** (infografías como
+  Telefónica p.13 y Ferrovial p.19 con letras espaciadas; español sobre inglés).
+- Respuestas sin el dato clave (7): bbva-09, bbva-11, tef-02, tef-07, fer-03, fer-04
+  (redondeo aceptado en revisión), comp-01. A veces el LLM usa un número parecido de
+  otro fragmento (fer-03, comp-01): el problema vuelve a ser el contexto recibido.
+- Criterios de la revisión manual: fer-06 y comp-02 cuentan como acierto aunque son
+  genéricas; en comp-02 la conclusión generaliza las "tres líneas de defensa" a
+  Telefónica sin fuente (vigilar en las comparaciones).
+
+**Conclusión: el cuello de botella es la búsqueda (60 %), no el LLM.** Las mejoras van
+ahí primero, y cada una con su propio `--label` para compararla con `base`.
+
+### Mejoras a probar (una a una, contra `base`)
+- [ ] Más fragmentos al LLM (k = 8–10). La más barata.
 - [ ] Búsqueda híbrida: significado (embeddings) + palabras exactas (BM25).
-- [ ] Reranker: buscar ~20 candidatos y que un segundo modelo elija los 5 mejores.
-- [ ] Limitar fragmentos por página (1-2) para diversificar resultados.
-      (Se aplicará ya en la Fase 3, al montar el asistente.)
+      Debería ayudar con siglas, ratings y cifras ("Baa3", "IRRBB").
+- [ ] Traducir la pregunta al idioma del documento antes de buscar.
+      Caso claro: "deuda neta de Ferrovial" falla en español y acierta en inglés.
+- [ ] Reranker: de 20 candidatos, un segundo modelo elige los mejores.
 - [ ] Limpiar texto con letras separadas por espacios ("G L O B A L").
-- [ ] Comparar e5-base frente a e5-small (calidad frente a velocidad).
-- [ ] Probar otros tamaños de fragmento (p. ej. 200 y 400 palabras).
-- [ ] Incluir en el conjunto de prueba preguntas en español sobre Ferrovial (inglés)
-      y preguntas que comparen empresas.
+- [ ] Comparar e5-base frente a e5-small; probar fragmentos de 200 y 400 palabras.
+- [x] Limitar fragmentos por página (máx. 2): hecho en la Fase 3.
+- [x] Preguntas en español sobre Ferrovial y comparaciones: incluidas en el conjunto.

@@ -1,0 +1,473 @@
+# =============================================================================
+# CONJUNTO DE EVALUACIÓN · Fase 4
+# =============================================================================
+# Cada pregunta tiene la respuesta que creemos correcta, la(s) página(s) donde está
+# y la frase literal del informe que la respalda (sacada del texto extraído).
+#
+# CÓMO REVISAR (tú):
+#   1. Abre el PDF de la empresa en la página indicada (la que marca el visor).
+#   2. Comprueba que la respuesta esperada es correcta y completa.
+#   3. Cambia "estado":
+#        ok         -> la respuesta es correcta tal cual
+#        corregida  -> has cambiado algo (explica qué en "notas")
+#        descartada -> la pregunta no sirve (explica por qué en "notas")
+#   Si la página no coincide con la del visor, corrige "paginas".
+#
+# CAMPOS:
+#   tipo:    cifra | descriptiva | idioma | comparacion | sin_respuesta | trampa
+#   claves:  datos que DEBEN aparecer en la respuesta (se comprueban automáticamente).
+#            Alternativas separadas por " | ". Los números se comparan sin puntos,
+#            comas ni espacios (127.174 = 127 174 = 127,174).
+#   paginas: donde está la respuesta. Sirve para medir si el buscador la encuentra.
+#
+# VERIFICACIÓN (04/11): claves comprobadas en el texto de la página del PDF original y,
+# en tablas e infografías, también en la imagen de la página. Se corrigieron tef-01,
+# tef-02 y comp-01 (Telefónica: 82.655 empleados en 2025, no 100.870).
+#
+# REGLA: una vez revisado y "congelado", NO se cambia mientras se prueban mejoras.
+# =============================================================================
+
+# ----------------------------------------------------------------------------- BBVA
+- id: bbva-01
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Cuál fue el beneficio atribuido de BBVA en 2025?"
+  respuesta_esperada: "10.511 millones de euros, un 4,5 % más que en 2024."
+  claves: ["10.511"]
+  paginas: [5]
+  cita_literal: "En 2025 alcanzamos un beneficio atribuido de 10.511 millones de euros, un 4,5% más que el año anterior."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-02
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Qué rentabilidad sobre el patrimonio tangible (ROTE) obtuvo BBVA en 2025?"
+  respuesta_esperada: "19,3 %."
+  claves: ["19,3"]
+  paginas: [5, 10]
+  cita_literal: "la rentabilidad sobre el patrimonio tangible (ROTE) se situó en el 19,3%."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-03
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Cuál era el ratio CET1 fully loaded del Grupo BBVA a cierre de 2025?"
+  respuesta_esperada: "12,70 %."
+  claves: ["12,70 | 12,7"]
+  paginas: [658]
+  cita_literal: "El ratio CET1 fully loaded del Grupo BBVA se ha situado en el 12,70 % a cierre de diciembre de 2025"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-04
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Cuál fue la tasa de mora del Grupo BBVA en 2025?"
+  respuesta_esperada: "2,7 % (con una tasa de cobertura del 85 % y un coste de riesgo del 1,39 %)."
+  claves: ["2,7"]
+  paginas: [10]
+  cita_literal: "El coste de riesgo acumulado se situó en el 1,39%, mientras que la tasa de mora descendió al 2,7% y la de cobertura aumentó hasta el 85%."
+  estado: ok
+  notas: "Trampa posible: otras páginas dan la tasa de mora de un país concreto (p. ej. 3,0 % en la p. 357). Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-05
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Qué ratio de eficiencia tuvo BBVA en 2025?"
+  respuesta_esperada: "38,8 %."
+  claves: ["38,8"]
+  paginas: [10]
+  cita_literal: "mejoramos nuestro ratio de eficiencia hasta el 38,8%"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-06
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Qué dividendo total por acción reparte BBVA con cargo a 2025?"
+  respuesta_esperada: "92 céntimos de euro por acción (32 céntimos en noviembre de 2025 más 60 céntimos complementarios); pay-out del 50 %."
+  claves: ["92 | 0,92"]
+  paginas: [6, 29, 350]
+  cita_literal: "eleva el dividendo total a 92 céntimos por acción —un 31% más que el año anterior—, el más alto de nuestra historia."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-07
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Cuánto negocio sostenible canalizó BBVA en 2025 y cuál es su objetivo para 2025-2029?"
+  respuesta_esperada: "134.000 millones de euros en 2025; objetivo de 700.000 millones para 2025-2029."
+  claves: ["134", "700"]
+  paginas: [15, 23, 51]
+  cita_literal: "Objetivo 2025-2029 700 MM€ · Canalizado en 2025 € 134MM"
+  estado: ok
+  notas: "MM€ = miles de millones de euros. Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-08
+  tipo: cifra
+  empresa: [BBVA]
+  pregunta: "¿Cuántos empleados tenía BBVA en 2025?"
+  respuesta_esperada: "127.174 empleados."
+  claves: ["127.174"]
+  paginas: [189]
+  cita_literal: "|Total|127.174|125.916|"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: bbva-09
+  tipo: trampa
+  empresa: [BBVA]
+  pregunta: "¿Cuántos empleados tenía BBVA en 2024?"
+  respuesta_esperada: "125.916 empleados (no confundir con los 127.174 de 2025)."
+  claves: ["125.916"]
+  paginas: [189]
+  cita_literal: "|Total|127.174|125.916|  (columnas 2025 | 2024)"
+  estado: ok
+  notas: "Mide si distingue el año correcto en una tabla. Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: bbva-10
+  tipo: descriptiva
+  empresa: [BBVA]
+  pregunta: "¿Qué objetivos financieros se ha fijado BBVA para el periodo 2025-2028?"
+  respuesta_esperada: "ROTE medio cercano al 22 % en 2025-2028; eficiencia próxima al 35 % en 2028; crecimiento anual del patrimonio neto tangible por acción más dividendos en torno al 15 %."
+  claves: ["22", "35", "15"]
+  paginas: [8]
+  cita_literal: "Alcanzar un ROTE medio cercano al 22% en el periodo 2025-2028. Situar la eficiencia en niveles próximos al 35% en 2028. Generar un crecimiento anual del patrimonio neto tangible por acción más dividendos en torno al 15%"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: bbva-11
+  tipo: descriptiva
+  empresa: [BBVA]
+  pregunta: "¿Qué riesgos de tipos de interés menciona BBVA?"
+  respuesta_esperada: "BBVA distingue dos ámbitos. En el banking book, el riesgo de interés estructural (IRRBB o RIE): el impacto de las variaciones de tipos en los resultados (vía margen de intereses y valoración a valor razonable) y en el valor patrimonial, con cuatro fuentes: repreciación, curva, opcionalidad y base; además, el riesgo de spread de crédito del banking book (CSRBB). En las carteras de negociación (trading book), el riesgo de tipos de interés como parte del riesgo de mercado, por la exposición a movimientos de las curvas de tipos."
+  claves: ["repreciación", "spread de crédito | CSRBB"]
+  paginas: [548, 549, 556]
+  cita_literal: "El riesgo de interés estructural (en adelante, RIE o IRRBB) recoge el impacto potencial que las variaciones en el tipo de interés de mercado pueden provocar en los resultados [...] se consideran todas las fuentes principales de generación de este riesgo: el riesgo de repreciación, el riesgo de curva, el riesgo de opcionalidad y el riesgo de base. / Adicionalmente, el riesgo de spread de crédito del banking book (CSRBB)... / 7.4.1 Riesgo de mercado en carteras de negociación: Riesgo de tipos de interés..."
+  estado: corregida
+  notas: "Corregida por Santi: faltaba el marco IRRBB (final p.548), el CSRBB (inicio p.549) y la distinción banking book / trading book (p.556). La idea cruza dos páginas: mide la limitación de trocear dentro de cada página."
+
+# ----------------------------------------------------------------------- Telefónica
+- id: tef-01
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Cuántos empleados tenía Telefónica al cierre de 2025?"
+  respuesta_esperada: "82.655 empleados al cierre de 2025 (en 2024 eran 100.870)."
+  claves: ["82.655"]
+  paginas: [39, 127]
+  cita_literal: "Número de empleados por zona geográfica · Total Grupo · 2024: 100.870 · 2025: 82.655"
+  estado: corregida
+  notas: "CORREGIDA al verificar la imagen del PDF: las columnas son 2024 | 2025 y el texto extraído perdió la cabecera de años. Error probable del sistema: responder 100.870."
+
+- id: tef-02
+  tipo: trampa
+  empresa: [Telefónica]
+  pregunta: "¿Por qué varió tanto la plantilla de Telefónica entre 2024 y 2025?"
+  respuesta_esperada: "Bajó de 100.870 (2024) a 82.655 (2025), principalmente por cambios en el perímetro de consolidación: la venta de Telefónica Móviles Argentina, Telefónica del Perú, Telefónica Móviles del Uruguay y Otecel (salida de Hispanoamérica)."
+  claves: ["perímetro", "82.655"]
+  paginas: [127]
+  cita_literal: "La variación entre 2024 y 2025 se debe principalmente a los cambios en el perímetro de consolidación."
+  estado: corregida
+  notas: "CORREGIDA: la plantilla BAJÓ (no subió). Verificado en la imagen de la p.127."
+
+- id: tef-03
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Qué dividendo por acción pagó Telefónica durante 2025?"
+  respuesta_esperada: "0,30 euros por acción en efectivo (0,15 en junio y 0,15 en diciembre); rentabilidad por dividendo del 7,6 %."
+  claves: ["0,30 | 0,3"]
+  paginas: [14]
+  cita_literal: "durante el año 2025 se han pagado 0,30 euros por acción en efectivo (0,15 en junio y 0,15 en diciembre), situándose a rentabilidad por dividendo de 2025 en el 7,6%."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: tef-04
+  tipo: trampa
+  empresa: [Telefónica]
+  pregunta: "¿Qué dividendo pagará Telefónica con cargo a 2026?"
+  respuesta_esperada: "0,15 euros por acción en efectivo, pagadero en junio de 2027."
+  claves: ["0,15"]
+  paginas: [14]
+  cita_literal: "En 2026, se pagará un dividendo de 0,15 euros por acción en efectivo pagadero en junio de 2027."
+  estado: ok
+  notas: "Mide si distingue el dividendo de 2025 (0,30) del de 2026 (0,15). Verificada contra el PDF original (texto de la página )."
+
+- id: tef-05
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Cuál era la capitalización bursátil de Telefónica a cierre de 2025?"
+  respuesta_esperada: "19.806 millones de euros, con un precio por acción de 3,49 euros (caída del 11,3 % en el año)."
+  claves: ["19.806"]
+  paginas: [14]
+  cita_literal: "Telefónica ha cerrado 2025 con una capitalización bursátil de 19.806 millones de euros y un precio por acción de 3,49 euros, lo que supone una caída del 11,3% en el año"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: tef-06
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Cuál es el precio objetivo de los analistas para la acción de Telefónica?"
+  respuesta_esperada: "4,05 euros por acción (recomendaciones: 21 % comprar, 51 % mantener, 28 % vender)."
+  claves: ["4,05"]
+  paginas: [13]
+  cita_literal: "|Vender 28%||**4,05€/acción**|"
+  estado: ok
+  notas: "Dato en una tabla/infografía. Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: tef-07
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Quiénes son los accionistas significativos de Telefónica?"
+  respuesta_esperada: "SEPI 10 %, Criteria Caixa 9,99 %, PIF 9,97 %, BBVA 5,01 % y BlackRock 5,01 %."
+  claves: ["SEPI", "Criteria", "PIF"]
+  paginas: [13]
+  cita_literal: "Participaciones significativas: SEPI 10% · Criteria Caixa 9,99% · PIF 9,97% · BBVA 5,01% · Blackrock 5,01%"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: tef-08
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Qué ratings crediticios tiene Telefónica?"
+  respuesta_esperada: "Moody's Baa3, Fitch BBB y S&P BBB-."
+  claves: ["Baa3", "BBB"]
+  paginas: [13]
+  cita_literal: "Ratings crediticios: Moody's Baa3 · fitch BBB · S&P BBB-"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: tef-09
+  tipo: trampa
+  empresa: [Telefónica]
+  pregunta: "¿Qué importe neto de la cifra de negocios tuvo VMO2 en 2025?"
+  respuesta_esperada: "11.808 millones de euros, un 6,4 % menos que en 2024 (12.616 millones)."
+  claves: ["11.808"]
+  paginas: [24]
+  cita_literal: "|Importe neto de la cifra de negocios|12.616|11.808|(6,4%)|  (columnas 2024 | 2025)"
+  estado: ok
+  notas: "En esta tabla la primera columna es 2024: mide si lee bien el orden de columnas. Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: tef-10
+  tipo: cifra
+  empresa: [Telefónica]
+  pregunta: "¿Cuántos accesos gestionaba Telefónica España a 31 de diciembre de 2025?"
+  respuesta_esperada: "57,6 millones de accesos, un 37,9 % más que un año antes."
+  claves: ["57,6"]
+  paginas: [21]
+  cita_literal: "Telefónica España gestiona 57,6 millones de accesos a 31 de diciembre de 2025, creciendo un 37,9%"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: tef-11
+  tipo: descriptiva
+  empresa: [Telefónica]
+  pregunta: "¿Dejó Telefónica de cotizar en alguna bolsa? ¿Cuándo?"
+  respuesta_esperada: "Sí, en la Bolsa de Nueva York (NYSE), en enero de 2026."
+  claves: ["NYSE | Nueva York"]
+  paginas: [13]
+  cita_literal: "En ene-26 se llevó a cabo la exclusión de la cotización de la NYSE."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página y de la imagen)."
+
+# ---------------------------------------------- Ferrovial (informe en INGLÉS)
+- id: fer-01
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿Cuál fue la deuda neta de Ferrovial en 2025, excluidos los proyectos de infraestructura?"
+  respuesta_esperada: "-1.341 millones de euros (≈ -1.300 millones): posición de caja neta, excluidos los proyectos de infraestructura."
+  claves: ["1.341 | 1,3"]
+  paginas: [7, 33]
+  cita_literal: "consolidated net debt of minus €1.3 billion, excluding infrastructure projects  /  Consolidated Net Debt of ex-infrastructure project companies at EUR -1,341 million"
+  estado: ok
+  notas: "Falló en la Fase 3 (falso negativo). Pareja de control: fer-07 (en inglés). Verificada contra el PDF original (texto de la página )."
+
+- id: fer-02
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿Cuántos empleados tenía Ferrovial en 2025?"
+  respuesta_esperada: "22.609 empleados."
+  claves: ["22.609"]
+  paginas: [55, 143]
+  cita_literal: "with over 22,609 employees and 9,627 million euros in revenues"
+  estado: ok
+  notas: "Pareja de control: fer-08 (en inglés). Verificada contra el PDF original (texto de la página )."
+
+- id: fer-03
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿Cuáles fueron los ingresos de Ferrovial en 2025?"
+  respuesta_esperada: "9.627 millones de euros (+8,6 % en términos comparables)."
+  claves: ["9.627"]
+  paginas: [33, 41, 55]
+  cita_literal: "Revenue at EUR 9,627 million (+8.6% LfL growth)"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: fer-04
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿Qué participación adicional del 407 ETR compró Ferrovial en 2025 y cuánto pagó?"
+  respuesta_esperada: "Un 5,06 % adicional por 1.271 millones de euros, hasta alcanzar el 48,29 % de la autopista canadiense."
+  claves: ["5,06", "1.271"]
+  paginas: [13, 33]
+  cita_literal: "acquisition of 5.06% stake in 407 ETR (EUR -1,271 million)  /  reaching 48.29% of the ownership of the Canadian highway"
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: fer-05
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿En qué índice bursátil entró Ferrovial en diciembre de 2025?"
+  respuesta_esperada: "En el Nasdaq-100, año y medio después de empezar a cotizar en EE. UU."
+  claves: ["Nasdaq"]
+  paginas: [7, 13]
+  cita_literal: "In December 2025, Ferrovial was included in the Nasdaq-100 Index, just a year and half after its U.S. listing."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página )."
+
+- id: fer-06
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿Cómo gestiona Ferrovial el riesgo de tipo de interés?"
+  respuesta_esperada: "Busca optimizar el gasto financiero y mantener proporciones adecuadas de deuda a tipo fijo y variable según el mercado; cuando los tipos están bajos, intenta fijar importes futuros a nivel de las sociedades ex-proyectos de infraestructura."
+  claves: []
+  paginas: [392]
+  cita_literal: "Ferrovial manages interest rate risk so as to optimize the financial expense borne by the Group and achieve suitable proportions of fixed- and variable-rate debt based on market conditions."
+  estado: ok
+  notas: "En la Fase 2 la p.392 no salía en el top 10 preguntando en español. Revisada por Santi en el PDF."
+
+- id: fer-07
+  tipo: cifra
+  empresa: [Ferrovial]
+  pregunta: "What was Ferrovial's net debt excluding infrastructure projects in 2025?"
+  respuesta_esperada: "Minus EUR 1,341 million (≈ minus €1.3 billion): a net cash position."
+  claves: ["1.341 | 1,3"]
+  paginas: [7, 33]
+  cita_literal: "consolidated net debt of minus €1.3 billion, excluding infrastructure projects"
+  estado: ok
+  notas: "Control en inglés de fer-01. Verificada contra el PDF original (texto de la página )."
+
+- id: fer-08
+  tipo: cifra
+  empresa: [Ferrovial]
+  pregunta: "How many employees did Ferrovial have in 2025?"
+  respuesta_esperada: "22,609 employees."
+  claves: ["22.609"]
+  paginas: [55, 143]
+  cita_literal: "with over 22,609 employees"
+  estado: ok
+  notas: "Control en inglés de fer-02. Verificada contra el PDF original (texto de la página )."
+
+- id: fer-09
+  tipo: trampa
+  empresa: [Ferrovial]
+  pregunta: "¿Cuál es el precio objetivo de consenso de los analistas para Ferrovial y qué rating crediticio tiene?"
+  respuesta_esperada: "Precio objetivo de consenso de 59,0 euros; rating crediticio BBB (S&P y Fitch)."
+  claves: ["59", "BBB"]
+  paginas: [19]
+  cita_literal: "C R E D I T R A T I N G : BBB · A N A L Y S T C O N S E N S U S T A R G E T P R I C E * : €59.0 · [S&P and Fitch]"
+  estado: ok
+  notas: "Texto con letras separadas por espacios en el PDF extraído: mide ese problema de limpieza. Verificada contra el PDF original (texto de la página y de la imagen)."
+
+- id: fer-10
+  tipo: idioma
+  empresa: [Ferrovial]
+  pregunta: "¿Quiénes son los principales accionistas de Ferrovial?"
+  respuesta_esperada: "Capital flotante 55,46 %; Rafael del Pino Calvo-Sotelo 21,53 %; TCI Master Fund 10,03 %; María del Pino Calvo-Sotelo 8,64 %; BlackRock 4,33 % (datos a 31/12/2025)."
+  claves: ["55,46", "21,53"]
+  paginas: [20]
+  cita_literal: "Free Float 55.46% · R. del Pino Calvo-Sotelo 21.53% · M. del Pino Calvo-Sotelo 8.64% · TCI Master Fund 10.03% · Blackrock 4.33%"
+  estado: ok
+  notas: "Comprueba en el PDF a quién corresponde cada porcentaje (infografía). Verificada contra el PDF original (texto de la página y de la imagen)."
+
+# ----------------------------------------------------------------- Comparaciones
+- id: comp-01
+  tipo: comparacion
+  empresa: [BBVA, Telefónica, Ferrovial]
+  pregunta: "¿Cuál de las tres empresas tenía más empleados en 2025?"
+  respuesta_esperada: "BBVA (127.174), seguida de Telefónica (82.655) y Ferrovial (22.609)."
+  claves: ["127.174", "82.655", "22.609"]
+  paginas: [189, 39, 127, 55, 143]
+  cita_literal: "Ver bbva-08, tef-01 y fer-02."
+  estado: corregida
+  notas: "CORREGIDA: Telefónica tenía 82.655 empleados en 2025 (ver tef-01)."
+
+- id: comp-02
+  tipo: comparacion
+  empresa: [BBVA, Telefónica, Ferrovial]
+  pregunta: "Compara cómo gestionan el riesgo de tipos de interés las tres empresas."
+  respuesta_esperada: "BBVA: marco IRRBB (repreciación, curva, opcionalidad, base) y sensibilidad positiva a subidas de tipos en el margen. Telefónica: actuaciones globales, fundamentalmente con derivados. Ferrovial: optimizar gasto financiero y equilibrar deuda fija/variable."
+  claves: []
+  paginas: [403, 549, 216, 392]
+  cita_literal: "Telefónica p.216: 'En el caso de riesgos financieros, como tipo de cambio o de interés, se gestionan mediante actuaciones globales, fundamentalmente con derivados financieros.'"
+  estado: ok
+  notas: "Descriptiva: se revisa a mano. Revisada por Santi en el PDF."
+
+- id: comp-03
+  tipo: comparacion
+  empresa: [Telefónica, Ferrovial]
+  pregunta: "Compara los ratings crediticios de Telefónica y Ferrovial."
+  respuesta_esperada: "Telefónica: Moody's Baa3, Fitch BBB, S&P BBB-. Ferrovial: BBB (S&P y Fitch)."
+  claves: ["Baa3", "BBB"]
+  paginas: [13, 19]
+  cita_literal: "Ver tef-08 y fer-09."
+  estado: ok
+  notas: "Verificada contra el PDF original (texto de la página y de la imagen)."
+
+# ------------------------------------------- Sin respuesta (debe decir "no lo encuentro")
+- id: none-01
+  tipo: sin_respuesta
+  empresa: []
+  pregunta: "¿Quién ganó la última Champions League?"
+  respuesta_esperada: "No encuentro esta información en los informes disponibles."
+  claves: []
+  paginas: []
+  cita_literal: "Comprobado: 'Champions League' no aparece en ningún informe."
+  estado: ok
+  notas: "Comprobado en los 3 PDF originales: el tema no aparece. Ojo: 'Champions' sale en Telefónica p.152/155, pero como 'RAI Champions' (IA responsable)."
+
+- id: none-02
+  tipo: sin_respuesta
+  empresa: [Ferrovial]
+  pregunta: "¿Qué impacto tendrá el Mundial de fútbol de 2030 en el negocio de Ferrovial?"
+  respuesta_esperada: "No encuentro esta información en los informes disponibles."
+  claves: []
+  paginas: []
+  cita_literal: "Comprobado: 'World Cup' / 'Mundial 2030' no aparece en ningún informe."
+  estado: ok
+  notas: "Comprobado en los 3 PDF originales: el tema no aparece."
+
+- id: none-03
+  tipo: sin_respuesta
+  empresa: []
+  pregunta: "¿Cuántos empleados tiene Iberdrola?"
+  respuesta_esperada: "No encuentro esta información en los informes disponibles."
+  claves: []
+  paginas: []
+  cita_literal: "Iberdrola solo se menciona de pasada en Ferrovial p.249, sin datos de empleados."
+  estado: ok
+  notas: "Trampa: el modelo 'sabe' la respuesta por su cuenta; no debe usarla. Comprobado en los 3 PDF originales: el tema no aparece."
+
+- id: none-04
+  tipo: sin_respuesta
+  empresa: [BBVA]
+  pregunta: "¿Qué beneficio prevé BBVA para el año 2030?"
+  respuesta_esperada: "No encuentro esta información en los informes disponibles."
+  claves: []
+  paginas: []
+  cita_literal: "Comprobado: no hay previsión de beneficio para 2030 (los objetivos llegan a 2028 y no son de beneficio)."
+  estado: ok
+  notas: "Trampa: podría 'extrapolar' a partir de los objetivos 2025-2028. Comprobado en los 3 PDF originales: el tema no aparece."
+
+- id: none-05
+  tipo: sin_respuesta
+  empresa: [Telefónica]
+  pregunta: "¿Qué opina Warren Buffett sobre Telefónica?"
+  respuesta_esperada: "No encuentro esta información en los informes disponibles."
+  claves: []
+  paginas: []
+  cita_literal: "Comprobado: 'Buffett' no aparece en ningún informe."
+  estado: ok
+  notas: "Comprobado en los 3 PDF originales: el tema no aparece."
